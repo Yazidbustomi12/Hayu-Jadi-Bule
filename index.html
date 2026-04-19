@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kurikulum Bahasa Inggris</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #13131a;
+    --card: #1a1a24;
+    --border: #2a2a3a;
+    --accent: #7c6af7;
+    --accent2: #f7c46a;
+    --accent3: #6af7b8;
+    --text: #e8e8f0;
+    --muted: #7070a0;
+    --done: #2d4a3e;
+    --done-text: #6af7b8;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* BG noise */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 32px 20px 80px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Header */
+  header {
+    text-align: center;
+    margin-bottom: 40px;
+    animation: fadeDown 0.6s ease both;
+  }
+
+  .badge {
+    display: inline-block;
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent2);
+    background: rgba(247,196,106,0.1);
+    border: 1px solid rgba(247,196,106,0.25);
+    padding: 5px 14px;
+    border-radius: 20px;
+    margin-bottom: 16px;
+  }
+
+  h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(28px, 6vw, 40px);
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 10px;
+  }
+
+  h1 span {
+    background: linear-gradient(135deg, var(--accent), var(--accent3));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .subtitle {
+    color: var(--muted);
+    font-size: 14px;
+    font-weight: 300;
+  }
+
+  /* Progress bar */
+  .progress-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px 24px;
+    margin-bottom: 32px;
+    animation: fadeDown 0.6s 0.1s ease both;
+  }
+
+  .progress-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+
+  .progress-label {
+    font-family: 'Syne', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+  }
+
+  .progress-pct {
+    font-family: 'Syne', sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--accent);
+  }
+
+  .bar-bg {
+    background: var(--border);
+    border-radius: 999px;
+    height: 8px;
+    overflow: hidden;
+  }
+
+  .bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent3));
+    border-radius: 999px;
+    transition: width 0.5s cubic-bezier(.4,0,.2,1);
+  }
+
+  .progress-sub {
+    margin-top: 8px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  /* Month sections */
+  .month-section {
+    margin-bottom: 28px;
+    animation: fadeUp 0.5s ease both;
+  }
+
+  .month-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .month-pill {
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    padding: 4px 12px;
+    border-radius: 999px;
+    flex-shrink: 0;
+  }
+
+  .m1 { background: rgba(124,106,247,0.15); color: var(--accent); border: 1px solid rgba(124,106,247,0.3); }
+  .m2 { background: rgba(247,196,106,0.15); color: var(--accent2); border: 1px solid rgba(247,196,106,0.3); }
+  .m3 { background: rgba(106,247,184,0.15); color: var(--accent3); border: 1px solid rgba(106,247,184,0.3); }
+
+  .month-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    flex: 1;
+  }
+
+  .month-toggle {
+    color: var(--muted);
+    font-size: 18px;
+    transition: transform 0.3s;
+  }
+
+  .month-toggle.open { transform: rotate(180deg); }
+
+  .month-body {
+    display: none;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .month-body.open { display: flex; }
+
+  /* Task cards */
+  .task-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px 18px;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .task-card:hover {
+    border-color: rgba(124,106,247,0.4);
+    transform: translateX(3px);
+  }
+
+  .task-card.done {
+    background: var(--done);
+    border-color: rgba(106,247,184,0.2);
+  }
+
+  .task-card.done .task-title { text-decoration: line-through; color: var(--muted); }
+
+  .checkbox {
+    width: 22px;
+    height: 22px;
+    border-radius: 6px;
+    border: 2px solid var(--border);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    margin-top: 1px;
+  }
+
+  .task-card.done .checkbox {
+    background: var(--accent3);
+    border-color: var(--accent3);
+  }
+
+  .check-icon {
+    color: #0a0a0f;
+    font-size: 12px;
+    font-weight: 900;
+    display: none;
+  }
+
+  .task-card.done .check-icon { display: block; }
+
+  .task-content { flex: 1; }
+
+  .task-title {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.4;
+    margin-bottom: 4px;
+  }
+
+  .task-meta {
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: 300;
+    font-style: italic;
+  }
+
+  /* Tools tip */
+  .tools-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent2);
+    border-radius: 12px;
+    padding: 14px 18px;
+    margin-top: 6px;
+  }
+
+  .tools-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--accent2);
+    margin-bottom: 6px;
+  }
+
+  .tools-list {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* Tips */
+  .tip-box {
+    background: linear-gradient(135deg, rgba(124,106,247,0.08), rgba(106,247,184,0.05));
+    border: 1px solid rgba(124,106,247,0.2);
+    border-radius: 14px;
+    padding: 18px 20px;
+    margin-top: 32px;
+    animation: fadeUp 0.5s 0.3s ease both;
+  }
+
+  .tip-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+
+  .tip-text {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.65;
+  }
+
+  /* Reset */
+  .reset-btn {
+    display: block;
+    margin: 24px auto 0;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    padding: 8px 20px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .reset-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <div class="badge">⚡ 15 Menit / Hari</div>
+    <h1>Bahasa Inggris<br><span>Biar Keren</span></h1>
+    <p class="subtitle">Level Menengah → Tinggi · 6 Bulan</p>
+  </header>
+
+  <div class="progress-wrap">
+    <div class="progress-top">
+      <span class="progress-label">Progress Keseluruhan</span>
+      <span class="progress-pct" id="pct">0%</span>
+    </div>
+    <div class="bar-bg">
+      <div class="bar-fill" id="bar" style="width:0%"></div>
+    </div>
+    <div class="progress-sub" id="progress-sub">0 dari 18 tugas selesai</div>
+  </div>
+
+  <!-- MONTH 1-2 -->
+  <div class="month-section" style="animation-delay:0.15s">
+    <div class="month-header" onclick="toggleMonth('m12')">
+      <span class="month-pill m1">Bulan 1–2</span>
+      <span class="month-title">Sound Keren 🎙️</span>
+      <span class="month-toggle open" id="toggle-m12">▾</span>
+    </div>
+    <div class="month-body open" id="m12">
+      <div class="task-card" onclick="toggleTask(this)">
+        <div class="checkbox"><span class="check-icon">✓</span></div>
+        <div class="task-content">
+          <div class="task-title">Shadowing 3x seminggu — tiru cara bicara native speaker</div>
+          <div class="task-meta">Cari video "English shadowing practice" di YouTube</div>
+        </div>
+      </div>
+      <div class="task-card" onclick="toggleTask(this)">
+        <div class="checkbox"><span class="check-icon">✓</span></div>
+        <div class="task-content">
+          <div class="task-title">Hafalkan 3 idiom/slang populer per minggu</div>
+          <div class="task-meta">Fokus yang dipakai native, bukan kosakata kamus kaku</div>
+        </div>
+      </div>
+      <div class="task-card" onclick="toggleTask(this)">
+        <div class="checkbox"><span class="check-icon">✓</span></div>
+        <div class="task-content">
+          <div class="task-title">Rekam diri sendiri ngomong tiap akhir pekan</div>
+          <div class="task-meta">Dengerin ulang, cari bagian yang masih kaku</div>
+        </div>
+      </div>
+      <div class="task-card" onclick="toggleTask(this)">
+        <div class="checkbox"><span class="check-icon">✓</span></div>
+        <div class="task-content">
+          <div class="task-title">Selesaikan 8 episode "6 Minute English" BBC</div>
+          <div class="task-meta">Gratis di YouTube / podcast, tiap ep tepat 6 menit</div>
+        </div>
+      </div>
+      <div class="task-card" onclick="toggleTask(this)">
+        <div class="checkbox"><span class="check-icon">✓</span></div>
+        <div class="task-content">
+          <div class="task-title">Install dan latihan di Elsa Speak selama 2 minggu</div>
+          <div class="task-meta">Fokus ke pronunciation feedback otomatis</div>
+        </div>
+      </div>
+      <div class="task-card" onclick="toggleTask(this)">
+        <div class="checkbox"><span class="check-icon">✓</span></div>
+        <div class="task-content">
+          <div class="task-title">Cek pengucapan kata dengan YouGlish setiap ada kata baru</div>
+          <div class="task-meta">Lihat native speaker pakai kata itu dalam konteks nyata</div>
+        </div>
+      </div>
+      <div class="tools-card">
+        <div class="tools-label">🛠 Tools Bulan 1–2</div>
+        <div class="tools-list">YouGlish · Elsa Speak · Podcast "6 Minute English" BBC · YouTube</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MONTH 3-4 -->
+  <div class="month-section" style="animation-delay:0.25s">
+    <div class="month-header" onclick="toggleMonth('m34')">
+      <span class="month-pill m2">Bulan 3–4</span>
+      <span class="month-title">Think in English 🧠</span>
+      <span class="month-toggle" id="toggle-m34">▾</span>
+    </div>
+    <div class="month-body" id="m34">
+      <div class="task-card" onclick="toggleTask(this)">
+        <div class="checkbox"><span class="check-icon">✓</span></div>
+        <div class="task-content">
+          <div class="task-title">Tulis jurnal harian 3–5 kalimat dalam bahasa Inggris</div>
+          <div class="task-meta">Ceritain harimu — nggak perlu sempurna, yang penting rutin</div>
+        </div>
+      </div>
+      <div class="task-card" onclick="toggleTask(this)">
+        <div class="checkbox"><span class="check-icon">✓</span></div>
+        <div class="task-content">
+          <div class="task-title">Baca 1 artikel pendek per hari (5 menit)</div>
+          <div class="task-meta">BBC Learning English atau Reddit r/explainlikeimfive</div>
+        </div>
+      </div>
+      <div class="task-card" onclick="toggleTask(this)">
+        <div class="checkbox"><span class="check-icon">✓</span></div>
+        <div class="task-content">
+          <div class="task-title">Ubah bahasa HP / aplikasi favorit ke Inggris</div>
+          <div class="task-meta">Immersion pasif yang kuat tanpa makan waktu tambahan</div>
+        </div>
+      </div>
+      <div class="task-card" onclick="toggleTask(this)">
+        <div class="checkbox"><span class="check-icon">✓</span></div>
+        <div class="task-content">
+          <div class="task-title">Nonton 2 episode series favorit dengan subtitle Inggris</div>
+          <div class="task-meta">Bukan Indonesia — paksa otak proses langsung</div>
+        </div>
+      </div>
+      <div class="task-card" onclick="toggleTask(this)">
+        <div class="checkbox"><span class="check-icon">✓</span></div>
+        <div class="task-content">
+          <div class="task-title">Latihan berpikir dalam bahasa Inggris saat ngantri/jalan</div>
+          <div class="task-meta">Deskripsikan sekitarmu dalam hati pakai Inggris</div>
+        </div>
+      </div>
+      <div class="task-card" onclick="toggleTask(this)">
+        <div class="checkbox"><span class="check-icon">✓</span></div>
+        <div class="task-content">
+          <div class="task-title">Review dan koreksi jurnal mingguan dengan ChatGPT/Claude</div>
+          <div class="task-meta">Minta feedback grammar dan saran kalimat yang lebih natural</div>
+        </div>
+      </div>
+      <div class="tools-card">
+        <div class="tools-label">🛠 Tools Bulan 3–4</div>
+        <div class="tools-list">BBC Learning English · Reddit · Notion / Notes app untuk jurnal · Netflix dengan subtitle EN</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MONTH 5-6 -->
+  <div class="month-section" style="animation-delay:0.35s">
+    <div class="month-header" onclick="toggleMonth('m56')">
+      <span class="month-pill m3">Bulan 5–6</span>
+      <span class="month-title">Sound Smart ✨</span>
+      <span class="month-toggle" id="toggle-m56">▾</span>
+    </div>
+    <div class="month-body" id="m56">
+      <div class="task-card" onclick="toggleTask(this)">
+        <div class="checkbox"><span class="check-icon">✓</span></div>
+        <div class="task-content">
+          <div class="task-title">Kuasai 10 advanced connectors yang sering dipakai</div>
+          <div class="task-meta">however · whereas · in contrast · to be fair · that said · admittedly</div>
+        </div>
+      </div>
+      <div class="task-card" onclick="toggleTask(this)">
+        <div class="checkbox"><span class="check-icon">✓</span></div>
+        <div class="task-content">
+          <div class="task-title">Pelajari dan praktikkan Conditional Sentences Tipe 3</div>
+          <div class="task-meta">"Had I known..." · "If I had studied harder, I would have..."</div>
+        </div>
+      </div>
+      <div class="task-card" onclick="toggleTask(this)">
+        <div class="checkbox"><span class="check-icon">✓</span></div>
+        <div class="task-content">
+          <div class="task-title">Pelajari Subjunctive mood</div>
+          <div class="task-meta">"I wish I were..." · "It's important that he be present..."</div>
+        </div>
+      </div>
+      <div class="task-card" onclick="toggleTask(this)">
+        <div class="checkbox"><span class="check-icon">✓</span></div>
+        <div class="task-content">
+          <div class="task-title">Daftar dan mulai obrolan di Tandem atau HelloTalk</div>
+          <div class="task-meta">Language exchange — ngobrol sama native speaker gratis</div>
+        </div>
+      </div>
+      <div class="task-card" onclick="toggleTask(this)">
+        <div class="checkbox"><span class="check-icon">✓</span></div>
+        <div class="task-content">
+          <div class="task-title">Ikut setidaknya 3 sesi obrolan dengan language partner</div>
+          <div class="task-meta">Terapkan semua yang sudah dipelajari sejak bulan 1</div>
+        </div>
+      </div>
+      <div class="task-card" onclick="toggleTask(this)">
+        <div class="checkbox"><span class="check-icon">✓</span></div>
+        <div class="task-content">
+          <div class="task-title">Rekam percakapan terakhir dan bandingkan dengan bulan 1</div>
+          <div class="task-meta">Ini momen "glow up" — perbedaannya bakal noticeable banget 🔥</div>
+        </div>
+      </div>
+      <div class="tools-card">
+        <div class="tools-label">🛠 Tools Bulan 5–6</div>
+        <div class="tools-list">Tandem · HelloTalk · Grammarly · Rekaman suara</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tip-box">
+    <div class="tip-title">⚡ Kunci Konsistensi 15 Menit</div>
+    <div class="tip-text">Lakukan di jam yang <strong style="color:var(--text)">sama setiap hari</strong> — pas sarapan, sebelum tidur, atau pas commute. 15 menit yang rutin selama 6 bulan jauh lebih powerful dari 3 jam belajar yang sekali-sekali. Progress itu soal konsistensi, bukan intensitas.</div>
+  </div>
+
+  <button class="reset-btn" onclick="resetAll()">↺ Reset semua progress</button>
+
+</div>
+
+<script>
+  const STORAGE_KEY = 'eng_curriculum_v1';
+
+  function getState() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch { return {}; }
+  }
+
+  function saveState(state) {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch {}
+  }
+
+  function getAllTasks() {
+    return document.querySelectorAll('.task-card');
+  }
+
+  function updateProgress() {
+    const all = getAllTasks();
+    const done = document.querySelectorAll('.task-card.done').length;
+    const pct = Math.round((done / all.length) * 100);
+    document.getElementById('pct').textContent = pct + '%';
+    document.getElementById('bar').style.width = pct + '%';
+    document.getElementById('progress-sub').textContent = done + ' dari ' + all.length + ' tugas selesai';
+  }
+
+  function toggleTask(el) {
+    el.classList.toggle('done');
+    persistState();
+    updateProgress();
+  }
+
+  function toggleMonth(id) {
+    const body = document.getElementById(id);
+    const toggle = document.getElementById('toggle-' + id);
+    body.classList.toggle('open');
+    toggle.classList.toggle('open');
+  }
+
+  function persistState() {
+    const tasks = getAllTasks();
+    const state = {};
+    tasks.forEach((t, i) => { state['t' + i] = t.classList.contains('done'); });
+    saveState(state);
+  }
+
+  function loadState() {
+    const state = getState();
+    const tasks = getAllTasks();
+    tasks.forEach((t, i) => { if (state['t' + i]) t.classList.add('done'); });
+    updateProgress();
+  }
+
+  function resetAll() {
+    if (confirm('Reset semua progress? Nggak bisa di-undo ya!')) {
+      document.querySelectorAll('.task-card.done').forEach(t => t.classList.remove('done'));
+      saveState({});
+      updateProgress();
+    }
+  }
+
+  loadState();
+</script>
+</body>
+</html>
